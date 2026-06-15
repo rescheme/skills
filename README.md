@@ -6,8 +6,7 @@ A collection of [Agent Skills](https://agentskills.io/specification) for the ope
 
 | Skill | Description |
 |-------|-------------|
-
-*(None yet — add your first skill under `skills/<name>/SKILL.md`)*
+| [issue-review](skills/issue-review/SKILL.md) | Analyze and review GitHub issues for bugs or feature requests. Independently verifies code before correlating with the reporter's hypothesis. |
 
 ## Installation
 
