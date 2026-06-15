@@ -41,7 +41,7 @@ npx skills init <skill-name> --path skills
 
 Or manually create `skills/<skill-name>/SKILL.md` with the required frontmatter:
 
-```markdown
+````markdown
 ---
 name: <skill-name>
 description: What this skill does and when to use it. Be specific.
@@ -61,7 +61,7 @@ cd /path/to/skill && npm install
 ```bash
 ./scripts/process.sh <input>
 ```
-```
+````
 
 ## License
 
