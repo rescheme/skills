@@ -87,10 +87,3 @@ Present a structured analysis:
 6. **Proposed Fix / Implementation** — based on your verified analysis
 7. **Affected Files** — specific files and changes needed
 
-## Optional: Workflow Integration
-
-If the user wants to mark the issue as in-progress:
-```bash
-gh issue edit <url> --add-label inprogress --add-assignee @me
-```
-If this fails, report the error and continue analysis.
