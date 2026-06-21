@@ -36,7 +36,7 @@ Check for repository conventions before judging:
 - Formatter/linter configs, local style guides
 - Relevant locally installed skills (e.g., Next.js, React, TypeScript, security)
 
-Use the active skill list when provided, or inspect `~/.agents/skills`, `.pi/agent/skills`, or run `npx skills list --json` / `npx skills list -g --json`. Apply matching skills as review guidance for their domain. Do not discover or install new skills during a review.
+Inspect the harness-provided active skill list before reviewing. Load and apply installed skills materially relevant to the changed technologies or risks. Follow the harness's skill-loading rules. Do not install skills or search external registries during review.
 
 ## Step 3: Review
 
