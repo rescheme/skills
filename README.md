@@ -8,6 +8,7 @@ A collection of [Agent Skills](https://agentskills.io/specification) for the ope
 |-------|-------------|
 | [issue-review](skills/issue-review/SKILL.md) | Analyze and review GitHub issues for bugs or feature requests. Independently verifies code before correlating with the reporter's hypothesis. |
 | [pr-review](skills/pr-review/SKILL.md) | Review code changes as a senior engineer. Assesses correctness, security, maintainability, and test coverage. Produces severity-ranked findings with merge readiness. |
+| [review-feedback](skills/review-feedback/SKILL.md) | Assess the latest code review feedback and verify each item against the current codebase before recommending action. |
 
 ## Installation
 
