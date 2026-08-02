@@ -1,5 +1,17 @@
 # Global AGENTS.md
 
+## Writing style
+
+Apply these rules to all prose you write, including documentation, commit messages, pull request descriptions, reports, and replies.
+
+Use ASD-STE100 Simplified Technical English for technical text:
+
+- Use approved words only. Each word has one meaning.
+- Use one term for each idea. Do not use different terms for the same thing.
+- Write short sentences. Keep instructions to 20 words or fewer.
+- Use active voice. Write "Turn the switch", not "The switch must be turned".
+- Write short paragraphs. Keep one topic in each paragraph.
+
 ## Tool Usage
 
 Do not run Playwright, chrome-devtools, browser automation, or similar browser-control/testing features in Codex unless the user explicitly asks for them in the prompt.
