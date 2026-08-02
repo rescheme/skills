@@ -18,34 +18,63 @@ Use this skill when the user asks to:
 
 ## Step 1: Resolve the Target
 
-Determine the review target:
+Determine the review target without guessing:
 
-- **No arguments**: review all local uncommitted changes. Run `git diff` (unstaged), `git diff --cached` (staged), and `git status --short` (untracked).
-- **Commit hash**: `git show <sha>`
-- **Branch name**: `git diff <branch>...HEAD`
-- **PR URL or number**: `gh pr view <pr> --json` for metadata, then `gh pr diff <pr>` or `git diff base...head` for the diff.
+- **Local changes**: when the user asks for a local review without mentioning a PR, review all uncommitted changes with `git diff`, `git diff --cached`, and `git status --short`.
+- **Commit hash**: use `git show <sha>`.
+- **Branch name**: use `git diff <branch>...HEAD`.
+- **PR URL or number**: use the specified pull request.
+- **PR review without a URL or number**: list open pull requests with `gh pr list --state open --json number,title,headRefName,author,isDraft,updatedAt,url`, then ask the user which one to review.
 
-For PR reviews, confirm: target PR number, base branch, head branch, latest head SHA, and author. Fetch the latest refs before reviewing, especially for re-reviews.
+For PR reviews, confirm the PR number, base branch and SHA, head branch and latest SHA, author, draft state, and URL.
+Fetch the latest refs before reviewing, especially for re-reviews, but do not switch branches or alter the working tree solely for review.
 
-## Step 2: Read the Full Files
+## Step 2: Gather Complete PR Context
 
-Diffs alone are not enough. Identify changed files from the diff, then read the **full contents** of each modified or untracked file to understand surrounding logic, contracts, error handling, and project patterns.
+Retrieve structured metadata and the changeset separately so truncation in one does not discard the other:
+
+```bash
+gh pr view <pr> --json number,title,body,author,url,state,isDraft,baseRefName,baseRefOid,headRefName,headRefOid,additions,deletions,changedFiles,commits,files,mergeable,mergeStateStatus,reviewDecision,statusCheckRollup
+gh pr diff <pr> --color=never
+```
+
+Read the title, body, commits, changed-file list, CI state, and complete diff.
+Compare `changedFiles` with `gh pr diff <pr> --name-only` to confirm that every changed file is accounted for.
+Do not rely on a combined metadata-and-diff command when output may be truncated.
+If output is truncated, rerun the metadata and diff separately, list changed paths with `gh pr diff <pr> --name-only`, and inspect each path from fetched Git refs with `git diff <base-sha>...<head-sha> -- <path>`.
+The current `gh pr diff` command does not accept a pathspec after `--`.
+
+If `gh` is unavailable or unauthenticated, inform the user and ask for the PR metadata and patch.
+
+## Step 3: Read the Full Files
+
+Diffs alone are not enough.
+Read the **full contents at the reviewed head SHA** of every modified source, test, and configuration file to understand surrounding logic, contracts, error handling, and project patterns.
+For deleted files, inspect the base version.
+Do not accidentally read a different local branch when its contents differ from the reviewed head SHA.
 
 Check for repository conventions before judging:
 - `AGENTS.md`, `CONVENTIONS.md`, `.editorconfig`
-- Formatter/linter configs, local style guides
-- Relevant locally installed skills (e.g., Next.js, React, TypeScript, security)
+- Formatter/linter configs and local style guides
+- Relevant locally installed skills such as Next.js, React, TypeScript, or security skills
 
-Inspect the harness-provided active skill list before reviewing. Load and apply installed skills materially relevant to the changed technologies or risks. Follow the harness's skill-loading rules. Do not install skills or search external registries during review.
+Inspect the harness-provided active skill list before reviewing.
+Load and apply installed skills materially relevant to the changed technologies or risks.
+Follow the harness's skill-loading rules.
+Do not install skills or search external registries during review.
 
-## Step 3: Review
+## Step 4: Review
 
 Prioritize issues that affect users, data, security, operations, or future maintenance.
 
 Review only the **changes and the behavior they affect**. Do not flag unrelated pre-existing code unless the change makes that existing risk newly reachable or worse.
 
+### Intent and Scope
+Determine what the PR is trying to change, whether the implementation matches that intent, and whether unrelated changes or accidental behavior shifts are included.
+
 ### Correctness
-Bugs, logical errors, off-by-one mistakes, incorrect conditionals, missing guards, unreachable branches, regressions, race conditions, stale state, broken UX flows. Does the code achieve its stated purpose?
+Bugs, logical errors, off-by-one mistakes, incorrect conditionals, missing guards, unreachable branches, regressions, race conditions, stale state, broken UX flows.
+Does the code achieve its stated purpose?
 
 ### Error Handling
 Swallowed failures, unexpected throws, uncaught error return types, partial failure paths, broken exceptional flows.
@@ -68,7 +97,11 @@ Weak, missing, or misleading tests where changed behavior crosses service, actio
 ### Behavior Changes
 Call out changed behavior that appears possibly unintentional.
 
-## Step 4: Form Findings
+## Step 5: Form the Review
+
+Start with a concise overview of what the PR changes and its user-visible or architectural impact.
+Then present actionable findings ordered by severity.
+If there are no findings, state that explicitly instead of inventing suggestions.
 
 For each issue, include:
 
@@ -80,9 +113,26 @@ For each issue, include:
 
 Be certain before calling something a bug. Investigate first, explain the realistic scenario, and avoid invented hypotheticals. If uncertain after reasonable investigation, describe the uncertainty instead of presenting it as a definite finding.
 
-When a locally installed skill materially informed a finding, cite it. Do not cite skills for generic issues.
+When a locally installed skill materially informed a finding, cite it.
+Do not cite skills for generic issues.
 
-## Step 5: Submit the Review
+After the findings, include a compact quality and readiness table with a `1-5` score and one-line rationale for:
+
+- Correctness
+- Project conventions and maintainability
+- Test coverage
+- Security
+- Performance
+- Overall merge readiness
+
+Use `1` for fundamentally unsafe or incomplete work, `3` for work requiring material fixes, and `5` for merge-ready work with no meaningful concerns.
+Keep scores consistent with the findings and merge recommendation.
+An unresolved Critical or High finding caps overall readiness at `2/5`; an unresolved Medium finding or PR-caused failing check caps it at `3/5`.
+
+End the written review with the checks run or skipped and any limitations caused by unavailable context, tooling, or environment.
+Keep sections and bullets concise while preserving the evidence needed to act.
+
+## Step 6: Submit the Review
 
 ### For PR Reviews
 
@@ -97,7 +147,7 @@ When GitHub review tooling is available, submit actionable findings as a formal 
 
 Present findings directly in the local response. Keep the tone matter-of-fact, direct, and helpful. Avoid flattery, accusatory phrasing, and filler.
 
-## Step 6: Merge Recommendation
+## Step 7: Merge Recommendation
 
 End every review with one of:
 
@@ -111,9 +161,13 @@ Use these as needed:
 - `git diff`, `git diff --cached`, `git status --short` for local changes
 - `git show <sha>` for a commit
 - `git diff <branch>...HEAD` for branch comparison
-- `gh pr view <number> --json` for PR metadata
-- `gh pr diff <number>` for PR diff
-- `git fetch` to update refs
+- `gh pr list --state open` when a PR review has no identifier
+- `gh pr view <number> --json <fields>` for structured PR metadata
+- `gh pr diff <number> --color=never` for the complete PR diff
+- `gh pr diff <number> --name-only` to inventory changed paths
+- `git diff <base-sha>...<head-sha> -- <path>` for a single file when the full diff is too large
+- `git show <head-sha>:<path>` for full file contents at the reviewed revision
+- `git fetch` to update refs without switching the working tree
 - `rg` for call sites, related types, tests, existing patterns
 - `nl -ba <file> | sed -n '<start>,<end>p'` for precise line references
 - `gh pr review <number> --approve|--request-changes|--comment --body ...` for final review state
