@@ -136,12 +136,21 @@ Keep sections and bullets concise while preserving the evidence needed to act.
 
 ### For PR Reviews
 
-When GitHub review tooling is available, submit actionable findings as a formal PR review with inline comments. Use tight file and line references. Do not post duplicate comments for the same issue.
+When GitHub review tooling is available, submit the complete written review as one formal PR review. Submit it for every outcome, including approval with no findings.
 
-- Compare the authenticated GitHub user with the PR author. If they are the same, GitHub rejects self-approval. Submit a formal `COMMENT` review with the body `Approved - Safe to merge` instead of `APPROVE`.
-- Verify the submitted feedback appears in the PR's formal review list, not only as general PR comments. If no review object is returned, report that as a tooling caveat locally.
-- Keep the local final response concise. Do not duplicate detailed findings that were posted to the PR. Report only the review outcome, whether a formal PR review was submitted, checks run or skipped, and any tooling/permission caveat.
-- If a formal PR review could not be submitted, provide the findings locally in review-ready form.
+The review body must include the overview, `Findings: None` or every finding, non-blocking observations, the quality table, checks and limitations, and the merge recommendation.
+Do not submit only `Approved - Safe to merge`.
+Use inline comments for actionable findings when the API supports them.
+Keep the same finding in the review body and its inline comment clear without repeating it in separate PR comments.
+
+- Compare the authenticated GitHub user with the PR author. If they are the same, GitHub rejects self-approval. Submit a formal `COMMENT` review with the complete review body instead of `APPROVE`.
+- For another author's PR, submit `APPROVE`, `REQUEST_CHANGES`, or `COMMENT` with the complete review body.
+- Verify the submitted review appears in the PR's formal review list.
+  Verify that its body contains the complete review, not only the event label.
+  If no review object is returned, report that as a tooling caveat locally.
+- Keep the local final response concise.
+  Report the review outcome, whether a formal PR review was submitted, checks run or skipped, and any tooling or permission caveat.
+- If a formal PR review could not be submitted, provide the complete review locally in review-ready form.
 
 ### For Non-PR Reviews
 
