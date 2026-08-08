@@ -63,6 +63,25 @@ Load and apply installed skills materially relevant to the changed technologies 
 Follow the harness's skill-loading rules.
 Do not install skills or search external registries during review.
 
+Apply current best practices for each changed language, framework, and platform.
+Confirm the repository's versions before recommending version-specific APIs or patterns.
+Treat changed code as industry-grade production code unless its documented purpose requires a different standard.
+Assess reliability, security, maintainability, performance, scalability, observability, and operational safety as applicable.
+
+### Large Changes
+
+When a change adds 1,000 lines or more, or is otherwise large or complex, perform a structured large-change review.
+Line count is a trigger for deeper review, not a defect by itself.
+
+- Inventory every changed file and group files by subsystem or data flow.
+- Review every group. Do not approve from a sample of the diff.
+- Trace critical flows across files, including errors, cleanup, retries, state changes, and external calls.
+- Assess whether boundaries and modules keep the change understandable and testable.
+- Check for duplicated, dead, generated, vendored, or unnecessary code.
+- Evaluate algorithms, queries, network calls, memory use, concurrency, and client bundle impact under realistic production load.
+- Check that tests cover the main flows, integration boundaries, failure paths, and important scale limits.
+- State which groups received review and disclose any incomplete coverage.
+
 ## Step 4: Review
 
 Prioritize issues that affect users, data, security, operations, or future maintenance.
@@ -86,7 +105,9 @@ Authorization, authentication, access control, tenant/role boundaries, unsafe cl
 Clarity, modularity, ownership boundaries, duplicated logic, misleading names, weak type contracts, excessive nesting. Flag style preferences only when they create real risk or violate established conventions.
 
 ### Efficiency
-Only flag obvious problems: N+1 queries, O(n²) on unbounded data, unbounded queries, expensive filters, unstable pagination, blocking I/O on hot paths, unnecessary client work, avoidable memory use.
+Flag material performance or scalability risks such as N+1 queries, O(n²) work on unbounded data, unbounded queries, expensive filters, unstable pagination, blocking I/O on hot paths, unnecessary client work, and avoidable memory use.
+For large changes, complete the deeper production-load assessment in the Large Changes section.
+Do not request micro-optimizations without evidence of meaningful impact.
 
 ### Edge Cases & Boundaries
 Validation gaps, unbounded inputs, unsafe parsing, empty states, retries, partial failure, boundary values.
