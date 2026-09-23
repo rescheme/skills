@@ -33,22 +33,3 @@ jobs:
             echo "Add secrets BOT_GITHUB_TOKEN and MODEL_API_KEY."
           fi
 
-  review:
-    name: Review
-    needs: gate
-    if: >
-      needs.gate.outputs.ready == 'true' &&
-      (github.event.pull_request.draft == false ||
-      github.event.action == 'ready_for_review' ||
-      github.event.action == 'review_requested')
-    uses: rescheme/bahamut/.github/workflows/review.yml@v0.1.1
-    with:
-      pr_number: ${{ github.event.pull_request.number }}
-      event_name: ${{ github.event_name }}
-      event_action: ${{ github.event.action }}
-      head_sha: ${{ github.event.pull_request.head.sha }}
-      previous_head_sha: ${{ github.event.before }}
-      image: ghcr.io/rescheme/bahamut-review:v0.1.1
-    secrets:
-      BOT_GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
-      MODEL_API_KEY: ${{ secrets.MODEL_API_KEY }}
