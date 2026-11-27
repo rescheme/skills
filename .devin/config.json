@@ -1,0 +1,10 @@
+{
+  "requiredPlugins": [
+    {
+      "source": "git-subdir",
+      "url": "https://github.com/paper-design/agent-plugins.git",
+      "path": "plugins/paper",
+      "sha": "e4635c6e9357b8e5361fbabadbe9287f5c31acff"
+    }
+  ]
+}
