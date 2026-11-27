@@ -3,7 +3,8 @@
     {
       "source": "git-subdir",
       "url": "https://github.com/rescheme/skills.git",
-      "path": "plugins/paper-remote"
+      "path": "plugins/paper-remote",
+      "sha": "63b5076bd8f23357869bb13248600e8b85a201e0"
     }
   ]
 }
