@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "paper-remote": {
+      "url": "https://mcp.paper.design",
+      "tokenScope": "user",
+      "description": "Paper remote MCP server"
+    }
+  }
+}

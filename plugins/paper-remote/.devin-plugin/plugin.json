@@ -1,0 +1,14 @@
+{
+  "name": "paper-remote",
+  "version": "1.0.0",
+  "description": "Paper remote MCP server for cloud agents",
+  "author": {
+    "name": "Rescheme"
+  },
+  "license": "MIT",
+  "keywords": [
+    "paper",
+    "design",
+    "mcp"
+  ]
+}
