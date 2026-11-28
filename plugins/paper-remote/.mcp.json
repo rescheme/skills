@@ -1,8 +1,9 @@
 {
   "mcpServers": {
-    "paper-remote": {
+    "paper-rescheme": {
       "url": "https://mcp.paper.design",
-      "tokenScope": "user"
+      "tokenScope": "user",
+      "description": "Paper remote MCP for Rescheme. Sign in with your Rescheme Paper account."
     }
   }
 }
